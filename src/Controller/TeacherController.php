@@ -67,6 +67,18 @@ class TeacherController extends AbstractController
     }
 
     /**
+     * @Route("/search", name="teacher_search")
+     */
+    public function search(Request $request, TeacherRepository $teacherRepository)
+    {
+        $firstName = $request->get('firstName');
+
+        return $this->render('teacher/index.html.twig', [
+            'teachers' => $teacherRepository->findBy(['firstName' => $firstName]),
+        ]);
+    }
+
+    /**
      * @Route("/{id}", name="teacher_show", methods={"GET"})
      */
     public function show(Teacher $teacher): Response
