@@ -5,6 +5,8 @@ namespace App\Controller;
 use App\Entity\Teacher;
 use App\Form\TeacherType;
 use App\Repository\TeacherRepository;
+use App\Service\Notify;
+use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -15,6 +17,20 @@ use Symfony\Component\Routing\Annotation\Route;
  */
 class TeacherController extends AbstractController
 {
+    /**
+     * @var LoggerInterface
+     */
+    private $logger;
+
+    /**
+     * TeacherController constructor.
+     */
+    public function __construct(LoggerInterface $logger)
+    {
+        $this->logger = $logger;
+    }
+
+
     /**
      * @Route("/", name="teacher_index", methods={"GET"})
      */
@@ -28,7 +44,7 @@ class TeacherController extends AbstractController
     /**
      * @Route("/new", name="teacher_new", methods={"GET","POST"})
      */
-    public function new(Request $request): Response
+    public function new(Request $request, Notify $notify): Response
     {
         $teacher = new Teacher();
         $form = $this->createForm(TeacherType::class, $teacher);
@@ -39,12 +55,27 @@ class TeacherController extends AbstractController
             $entityManager->persist($teacher);
             $entityManager->flush();
 
+            $this->logger->info("Teacher was created(construct)", ['teacher_id' => $teacher->getId()]);
+            $notify->notify($teacher->getEmail());
+
             return $this->redirectToRoute('teacher_index');
         }
 
         return $this->render('teacher/new.html.twig', [
             'teacher' => $teacher,
             'form' => $form->createView(),
+        ]);
+    }
+
+    /**
+     * @Route("/search", name="search")
+     */
+    public function search(Request $request, TeacherRepository $teacherRepository)
+    {
+        $firstName = $request->get('firstName');
+
+        return $this->render('teacher/index.html.twig', [
+            'teachers' => $teacherRepository->findBy(['firstName' => $firstName])
         ]);
     }
 
