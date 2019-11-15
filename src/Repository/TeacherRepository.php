@@ -5,6 +5,7 @@ namespace App\Repository;
 use App\Entity\Teacher;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Common\Persistence\ManagerRegistry;
+use Doctrine\ORM\NonUniqueResultException;
 
 /**
  * @method Teacher|null find($id, $lockMode = null, $lockVersion = null)
@@ -19,6 +20,15 @@ class TeacherRepository extends ServiceEntityRepository
         parent::__construct($registry, Teacher::class);
     }
 
+    public function searchByName($name)
+    {
+        return $this->createQueryBuilder('t')
+            ->andWhere('t.firstName = :name')
+            ->setParameter('name', $name)
+            ->orderBy('t.id', 'ASC')
+            ->getQuery()
+            ->getResult();
+    }
     // /**
     //  * @return Teacher[] Returns an array of Teacher objects
     //  */

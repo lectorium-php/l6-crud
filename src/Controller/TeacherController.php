@@ -33,6 +33,8 @@ class TeacherController extends AbstractController
 
     /**
      * @Route("/", name="teacher_index", methods={"GET"})
+     * @param TeacherRepository $teacherRepository
+     * @return Response
      */
     public function index(TeacherRepository $teacherRepository): Response
     {
@@ -43,6 +45,9 @@ class TeacherController extends AbstractController
 
     /**
      * @Route("/new", name="teacher_new", methods={"GET","POST"})
+     * @param Request $request
+     * @param Notify $notify
+     * @return Response
      */
     public function new(Request $request, Notify $notify): Response
     {
@@ -69,13 +74,16 @@ class TeacherController extends AbstractController
 
     /**
      * @Route("/search", name="search")
+     * @param Request $request
+     * @param TeacherRepository $teacherRepository
+     * @return Response
      */
     public function search(Request $request, TeacherRepository $teacherRepository)
     {
         $firstName = $request->get('firstName');
 
         return $this->render('teacher/index.html.twig', [
-            'teachers' => $teacherRepository->findBy(['firstName' => $firstName])
+            'teachers' => $teacherRepository->searchByName($firstName)
         ]);
     }
 
