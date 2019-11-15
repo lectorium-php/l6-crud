@@ -5,7 +5,7 @@ namespace App\Controller;
 use App\Entity\Teacher;
 use App\Form\TeacherType;
 use App\Repository\TeacherRepository;
-use App\Service\Notifier;
+use App\Service\Notify;
 use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -22,10 +22,14 @@ class TeacherController extends AbstractController
      */
     private $logger;
 
+    /**
+     * TeacherController constructor.
+     */
     public function __construct(LoggerInterface $logger)
     {
         $this->logger = $logger;
     }
+
 
     /**
      * @Route("/", name="teacher_index", methods={"GET"})
@@ -40,7 +44,7 @@ class TeacherController extends AbstractController
     /**
      * @Route("/new", name="teacher_new", methods={"GET","POST"})
      */
-    public function new(Request $request, Notifier $notifier): Response
+    public function new(Request $request, Notify $notify): Response
     {
         $teacher = new Teacher();
         $form = $this->createForm(TeacherType::class, $teacher);
@@ -51,11 +55,8 @@ class TeacherController extends AbstractController
             $entityManager->persist($teacher);
             $entityManager->flush();
 
-            $this->logger->info('Teacher was created', ['teacher_id' => $teacher->getId()]);
-
-            if ($teacher->getEmail()) {
-                $notifier->notify($teacher->getEmail());
-            }
+            $this->logger->info("Teacher was created(construct)", ['teacher_id' => $teacher->getId()]);
+            $notify->notify($teacher->getEmail());
 
             return $this->redirectToRoute('teacher_index');
         }
@@ -67,14 +68,14 @@ class TeacherController extends AbstractController
     }
 
     /**
-     * @Route("/search", name="teacher_search")
+     * @Route("/search", name="search")
      */
     public function search(Request $request, TeacherRepository $teacherRepository)
     {
         $firstName = $request->get('firstName');
 
         return $this->render('teacher/index.html.twig', [
-            'teachers' => $teacherRepository->findBy(['firstName' => $firstName]),
+            'teachers' => $teacherRepository->findBy(['firstName' => $firstName])
         ]);
     }
 
