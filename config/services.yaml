@@ -37,3 +37,8 @@ services:
     App\Event\EntityListener:
         tags:
             - {name: 'doctrine.event_listener', event: 'postPersist'}
+
+    App\Event\EntitySubscriber:
+        tags:
+            - { name: 'doctrine.event_subscriber' }
+
