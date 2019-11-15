@@ -30,6 +30,14 @@ services:
         arguments:
             $sendFrom: "%env(MAILER_FROM)%"
 
+    App\Event\BeforeListener:
+        tags:
+            - { name: doctrine.event_listener, event: postPersist, lazy: true }
+
     App\Event\CourseListener:
         tags:
-            - {name: 'doctrine.event_listener', event: 'postPersist'}
+            - { name: doctrine.event_listener, event: postPersist, lazy: true }
+
+    App\Event\TeacherSubscriber:
+        tags:
+            - { name: doctrine.event_subscriber, event: postUpdate, lazy: true }

@@ -72,10 +72,11 @@ class TeacherController extends AbstractController
      */
     public function search(Request $request, TeacherRepository $teacherRepository)
     {
-        $firstName = $request->get('firstName');
+        $query = $request->get('firstName');
+        $teachers = $teacherRepository->searchByName($query);
 
         return $this->render('teacher/index.html.twig', [
-            'teachers' => $teacherRepository->findBy(['firstName' => $firstName])
+            'teachers' => $teachers,
         ]);
     }
 
