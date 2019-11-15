@@ -30,6 +30,10 @@ services:
         arguments:
             $sendFrom: "%env(MAILER_FROM)%"
 
+    App\Event\AdditionalEntityListener:
+        tags:
+            - {name: 'doctrine.event_listener', event: 'postPersist'}
+
     App\Event\EntityListener:
         tags:
             - {name: 'doctrine.event_listener', event: 'postPersist'}
