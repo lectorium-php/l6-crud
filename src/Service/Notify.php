@@ -4,10 +4,12 @@
 namespace App\Service;
 
 
+use Swift_Mailer;
+
 class Notify
 {
     /**
-     * @var \Swift_Mailer
+     * @var Swift_Mailer
      */
     private $mailer;
     /**
@@ -15,7 +17,7 @@ class Notify
      */
     private $sendFrom;
 
-    public function __construct(\Swift_Mailer $mailer, string $sendFrom)
+    public function __construct(Swift_Mailer $mailer, string $sendFrom)
     {
         $this->mailer = $mailer;
         $this->sendFrom = $sendFrom;
