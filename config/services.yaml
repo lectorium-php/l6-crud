@@ -32,11 +32,11 @@ services:
 
     App\Event\AdditionalEntityListener:
         tags:
-            - {name: 'doctrine.event_listener', event: 'postPersist'}
+            - {name: 'doctrine.event_listener', event: 'postPersist', priority: 10}
 
     App\Event\EntityListener:
         tags:
-            - {name: 'doctrine.event_listener', event: 'postPersist'}
+            - {name: 'doctrine.event_listener', event: 'postPersist', priority: 1}
 
     App\Event\EntitySubscriber:
         tags:
