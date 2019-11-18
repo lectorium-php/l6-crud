@@ -22,8 +22,9 @@ class TeacherRepository extends ServiceEntityRepository
     public function searchByName($name)
     {
         return $this->createQueryBuilder('t')
-            ->andWhere('t.firstName = :name')
-            ->setParameter('name', $name)
+            ->andWhere('t.firstName like :name')
+            ->orWhere('t.lastName like :name')
+            ->setParameter('name', '%'.$name.'%')
             ->orderBy('t.id', 'ASC')
             ->getQuery()
             ->getResult();
