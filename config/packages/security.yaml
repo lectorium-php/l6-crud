@@ -10,15 +10,33 @@ security:
             entity:
                 class: App\Entity\User
                 property: email
+        api_user_provider:
+            entity:
+                class: App\Entity\User
     firewalls:
         dev:
             pattern: ^/(_(profiler|wdt)|css|images|js)/
             security: false
+
+        api_register:
+            pattern: ^/api/register
+            provider: api_user_provider
+            anonymous: true
+
+        api:
+            pattern: ^/api
+            anonymous: false
+            provider: api_user_provider
+            guard:
+                authenticators:
+                    - App\Security\APIAuthenticator
         main:
             anonymous: true
+            provider: app_user_provider
             guard:
                 authenticators:
                     - App\Security\AppAuthenticator
+                entry_point: App\Security\AppAuthenticator
             logout:
                 path: app_logout
                 # where to redirect after logout
