@@ -3,6 +3,7 @@
 namespace App\Service;
 
 use App\Entity\User;
+use App\Security\APIAuthenticator;
 use Symfony\Bridge\Doctrine\RegistryInterface;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\Validator\Constraints\Email;
@@ -28,12 +29,12 @@ class UserService
 
     public function createApiUser(string $email)
     {
-        $result = $this->validator->validate($email, [
+        $violations = $this->validator->validate($email, [
             new Email()
         ]);
 
-        if (!empty($result['violations'])) {
-            foreach ($result['violations'] as $violation) {
+        if (!empty($violations)) {
+            foreach ($violations as $violation) {
                 throw new BadRequestHttpException($violation->getMessage());
             }
         }
