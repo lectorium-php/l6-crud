@@ -34,7 +34,7 @@ class UserController extends AbstractController
         }
 
         return $this->json([
-            'api_token' => $user->getApiToken()
+            'api_token' => $user->getApiTokens()->first()->getToken()
         ]);
     }
 }

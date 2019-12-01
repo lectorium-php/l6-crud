@@ -2,9 +2,9 @@
 
 namespace App\Service;
 
+use App\Entity\ApiToken;
 use App\Entity\User;
-use App\Security\APIAuthenticator;
-use Symfony\Bridge\Doctrine\RegistryInterface;
+use Doctrine\Common\Persistence\ManagerRegistry;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\Validator\Constraints\Email;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
@@ -16,12 +16,9 @@ class UserService
      */
     private $validator;
 
-    /**
-     * @var RegistryInterface
-     */
     private $registry;
 
-    public function __construct(ValidatorInterface $validator, RegistryInterface $registry)
+    public function __construct(ValidatorInterface $validator, ManagerRegistry $registry)
     {
         $this->validator = $validator;
         $this->registry = $registry;
@@ -39,20 +36,15 @@ class UserService
             }
         }
 
-        $apiToken = $this->generateToken($email);
         $user = new User();
         $user->setEmail($email);
-        $user->setApiToken($apiToken);
+        $apiToken = new ApiToken($user);
 
         $em = $this->registry->getManager();
         $em->persist($user);
+        $em->persist($apiToken);
         $em->flush();
 
         return $user;
-    }
-
-    private function generateToken(string $email)
-    {
-        return bin2hex($email . random_bytes(60));
     }
 }

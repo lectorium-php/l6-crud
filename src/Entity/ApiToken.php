@@ -32,6 +32,15 @@ class ApiToken
      */
     private $user;
 
+    public function __construct(User $user)
+    {
+        $this->token = bin2hex($user->getEmail() . random_bytes(60));;
+        $this->expiresAt = new \DateTime('+1 hour');
+        $this->user = $user;
+
+        $user->addApiToken($this);
+    }
+
     public function getId(): ?int
     {
         return $this->id;
@@ -71,5 +80,15 @@ class ApiToken
         $this->user = $user;
 
         return $this;
+    }
+
+    public function isExpired(): bool
+    {
+        return $this->getExpiresAt() <= new \DateTime();
+    }
+
+    public function __toString()
+    {
+        return $this->token;
     }
 }

@@ -3,23 +3,28 @@
 namespace App\Security;
 
 use App\Entity\User;
+use App\Repository\ApiTokenRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
+use Symfony\Component\Security\Core\Exception\CustomUserMessageAuthenticationException;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Core\User\UserProviderInterface;
 use Symfony\Component\Security\Guard\AbstractGuardAuthenticator;
 
 class APIAuthenticator extends AbstractGuardAuthenticator
 {
-    private $em;
+    /**
+     * @var ApiTokenRepository
+     */
+    private $tokenRepository;
 
-    public function __construct(EntityManagerInterface $em)
+    public function __construct(ApiTokenRepository $tokenRepository)
     {
-        $this->em = $em;
+        $this->tokenRepository = $tokenRepository;
     }
 
     public function supports(Request $request)
@@ -30,21 +35,28 @@ class APIAuthenticator extends AbstractGuardAuthenticator
     public function getCredentials(Request $request)
     {
         return [
-            'token' => $request->headers->get('X-AUTH-TOKEN'),
+            'token' => $request->headers->get('X-AUTH-TOKEN')
         ];
     }
 
     public function getUser($credentials, UserProviderInterface $userProvider)
     {
-        $apiToken = $credentials['token'];
+        $token = $this->tokenRepository->findOneBy([
+            'token' => $credentials['token']
+        ]);
 
-        if (null === $apiToken) {
-            return;
+        if (!$token) {
+            throw new CustomUserMessageAuthenticationException(
+                'Invalid API Token'
+            );
+        }
+        if ($token->isExpired()) {
+            throw new CustomUserMessageAuthenticationException(
+                'Token expired'
+            );
         }
 
-        // if a User object, checkCredentials() is called
-        return $this->em->getRepository(User::class)
-            ->findOneBy(['apiToken' => $apiToken]);
+        return $token->getUser();
     }
 
     public function checkCredentials($credentials, UserInterface $user)
@@ -54,11 +66,9 @@ class APIAuthenticator extends AbstractGuardAuthenticator
 
     public function onAuthenticationFailure(Request $request, AuthenticationException $exception)
     {
-        $data = [
-            'message' => strtr($exception->getMessageKey(), $exception->getMessageData())
-        ];
-
-        return new JsonResponse($data, Response::HTTP_FORBIDDEN);
+        return new JsonResponse([
+            'message' => $exception->getMessage()
+        ], Response::HTTP_UNAUTHORIZED);
     }
 
     public function onAuthenticationSuccess(Request $request, TokenInterface $token, $providerKey)
