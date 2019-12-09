@@ -2,6 +2,7 @@
 
 namespace App\Controller\API;
 
+use App\Entity\ApiToken;
 use App\Service\UserService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -15,18 +16,28 @@ use Symfony\Component\Routing\Annotation\Route;
 class UserController extends AbstractController
 {
     /**
-     * @Route("/register", methods={"POST"})
+     * @var UserService
      */
-    public function register(Request $request, UserService $userService)
+    private $userService;
+
+    public function __construct(UserService $userService)
+    {
+        $this->userService = $userService;
+    }
+
+    /**
+     * @Route("/register", name="api_register", methods={"POST"})
+     */
+    public function register(Request $request)
     {
         $requestContent = json_decode($request->getContent(), true);
 
         if (!$requestContent['email']) {
-            return $this->json(['error' => 'Invalid request', Response::HTTP_BAD_REQUEST]);
+            return $this->json(['error' => 'Invalid request'], Response::HTTP_BAD_REQUEST);
         }
 
         try {
-            $user = $userService->createApiUser($requestContent['email']);
+            $user = $this->userService->createApiUser($requestContent['email']);
         } catch (BadRequestHttpException $exception) {
             return $this->json([
                 'error' => $exception->getMessage()
@@ -35,6 +46,25 @@ class UserController extends AbstractController
 
         return $this->json([
             'api_token' => $user->getApiTokens()->first()->getToken()
+        ]);
+    }
+
+    /**
+     * @Route("/renew-token", name="api_renew_token", methods={"POST"})
+     */
+    public function renewToken(Request $request)
+    {
+        $requestContent = json_decode($request->getContent(), true);
+
+        if (empty($requestContent['token'])) {
+            return $this->json(['error' => 'Invalid request'], Response::HTTP_BAD_REQUEST);
+        }
+
+        /** @var ApiToken $newToken */
+        $newApiToken = $this->userService->renewToken($requestContent['token']);
+
+        return $this->json([
+            'api_token' => $newApiToken->getToken()
         ]);
     }
 }
