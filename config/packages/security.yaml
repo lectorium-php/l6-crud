@@ -23,13 +23,13 @@ security:
 
         api_unsecure:
             pattern: ^/api/(register|renew-token)
-            provider: api_user_provider
             anonymous: true
 
         api:
             pattern: ^/api
             anonymous: false
             provider: api_user_provider
+            stateless: true
             guard:
                 authenticators:
                     - App\Security\APIAuthenticator
@@ -54,7 +54,4 @@ security:
     # Easy way to control access for large sections of your site
     # Note: Only the *first* access control that matches will be used
     access_control:
-        - { path: ^/admin, roles: ROLE_ADMIN }
-        # - { path: ^/profile, roles: ROLE_USER }
-#        - { path: ^/login, allow_if: "!is_authenticated()" }
-#        - { path: ^/tasks, roles: ROLE_USER }
+#        - { path: '^/api', roles: [IS_AUTHENTICATED_FULLY] }
