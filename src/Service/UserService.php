@@ -4,6 +4,7 @@ namespace App\Service;
 
 use App\Entity\ApiToken;
 use App\Entity\User;
+use App\Repository\ApiTokenRepository;
 use Doctrine\Common\Persistence\ManagerRegistry;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\Validator\Constraints\Email;
@@ -16,12 +17,21 @@ class UserService
      */
     private $validator;
 
+    /**
+     * @var ManagerRegistry
+     */
     private $registry;
 
-    public function __construct(ValidatorInterface $validator, ManagerRegistry $registry)
+    /**
+     * @var ApiTokenRepository
+     */
+    private $tokenRepository;
+
+    public function __construct(ValidatorInterface $validator, ManagerRegistry $registry, ApiTokenRepository $tokenRepository)
     {
         $this->validator = $validator;
         $this->registry = $registry;
+        $this->tokenRepository = $tokenRepository;
     }
 
     public function createApiUser(string $email)
@@ -46,5 +56,28 @@ class UserService
         $em->flush();
 
         return $user;
+    }
+
+    public function renewToken(string $oldToken)
+    {
+        /** @var ApiToken $oldApiToken */
+        $oldApiToken = $this->tokenRepository->findOneBy([
+            'token' => $oldToken
+        ]);
+
+        if (!$oldApiToken) {
+            throw new BadRequestHttpException("Invalid token");
+        }
+
+        $user = $oldApiToken->getUser();
+        $newApiToken = new ApiToken($user);
+
+        $em = $this->registry->getManager();
+
+        $em->remove($oldApiToken);
+        $em->persist($newApiToken);
+        $em->flush();
+
+        return $newApiToken;
     }
 }

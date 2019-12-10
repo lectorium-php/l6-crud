@@ -21,8 +21,8 @@ security:
             pattern: ^/(_(profiler|wdt)|css|images|js)/
             security: false
 
-        api_register:
-            pattern: ^/api/register
+        api_unsecure:
+            pattern: ^/api/(register|renew-token)
             provider: api_user_provider
             anonymous: true
 
