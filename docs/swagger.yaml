@@ -1,0 +1,40 @@
+openapi: 3.0.0
+info:
+  description: ''
+  version: 1.0.0
+  title: TEST API
+components:
+  securitySchemes:
+    authToken:
+      type: apiKey
+      name: X-AUTH-TOKEN
+      in: header
+  schemas:
+
+paths:
+  /api/teachers/:
+    get:
+      tags:
+        - "teachers"
+      summary: "show a teachers list"
+      description: ""
+      operationId: "index"
+      consumes:
+        - "application/json"
+        - "application/xml"
+      produces:
+        - "application/xml"
+        - "application/json"
+      parameters:
+
+
+      responses:
+        200:
+          description: "OK"
+      security:
+        - api_key: []
+
+servers:
+  - url: 'http://127.0.0.1/'
+    description: Local server
+
