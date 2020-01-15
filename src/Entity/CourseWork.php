@@ -12,6 +12,12 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class CourseWork
 {
+    const STATUSES = [
+        'new' => 'new',
+        'submitted' => 'submitted',
+        'rated' => 'rated'
+    ];
+
     /**
      * @ORM\Id()
      * @ORM\GeneratedValue()

@@ -1,0 +1,9 @@
+App\Entity\CourseWork:
+  courseWork (template):
+    title: '<word()>'
+    body: '<paragraph()>>'
+
+  courseWork1 (extends courseWork):
+    status: 'new'
+    course: '@course1'
+    student: '@student1'

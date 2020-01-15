@@ -76,7 +76,7 @@ class Course
     {
         if (!$this->teachers->contains($teacher)) {
             $this->teachers[] = $teacher;
-            $teacher->setCourse($this);
+            $teacher->addCourse($this);
         }
 
         return $this;
@@ -87,8 +87,8 @@ class Course
         if ($this->teachers->contains($teacher)) {
             $this->teachers->removeElement($teacher);
             // set the owning side to null (unless already changed)
-            if ($teacher->getCourse() === $this) {
-                $teacher->setCourse(null);
+            if ($teacher->getCourses()->contains($this)) {
+                $teacher->removeCourse($this);
             }
         }
 

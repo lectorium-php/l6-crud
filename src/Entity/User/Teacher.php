@@ -38,6 +38,8 @@ class Teacher extends User
         parent::__construct();
         $this->courses = new ArrayCollection();
         $this->courseWorkRates = new ArrayCollection();
+
+        $this->setRoles([User::ROLES['teacher']]);
     }
 
     public function getFirstName(): ?string

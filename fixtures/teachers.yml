@@ -1,0 +1,8 @@
+App\Entity\User\Teacher:
+  teacher (template):
+    firstName: '<firstName()>'
+    lastName: '<lastName()>'
+
+  teacher1 (extends teacher):
+    email: 'teacher1.symfony.lectorium@appcreative.net'
+    password: "<encodePassword(@self, 'teacher1')>"

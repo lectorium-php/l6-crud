@@ -1,0 +1,4 @@
+App\Entity\User\Admin:
+  admin1:
+    email: 'admin1.symfony.lectorium@appcreative.net'
+    password: "<encodePassword(@self, 'admin1')>"

@@ -45,6 +45,8 @@ class Student extends User
         parent::__construct();
         $this->courses = new ArrayCollection();
         $this->courseWorks = new ArrayCollection();
+
+        $this->setRoles([User::ROLES['student']]);
     }
 
     public function getId(): ?int
