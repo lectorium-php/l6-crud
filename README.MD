@@ -9,3 +9,7 @@ composer install
 ```
 bin/console hautelook:fixtures:load
 ```
+- setup test db fixtures:
+```
+bin/console t:f:l -e test -f
+```

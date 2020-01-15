@@ -4,6 +4,8 @@
 # Put parameters here that don't need to change on each machine where the app is deployed
 # https://symfony.com/doc/current/best_practices/configuration.html#application-related-configuration
 parameters:
+    test_db_path: '%kernel.cache_dir%/db.sqlite'
+    default_db_path: '%kernel.cache_dir%/Resources/private/tests/snapshot.sqlite'
 
 services:
     # default configuration for services in *this* file
@@ -32,3 +34,11 @@ services:
 
     App\DataFixtures\Faker\AppFaker:
         tags: [ { name: nelmio_alice.faker.provider } ]
+
+    App\Command\TestFixturesLoaderCommand:
+        calls:
+        - {method: setKernel, arguments: ['@kernel']}
+        - {method: setDefaultPath, arguments: ['%default_db_path%']}
+        - {method: setTestDbPath, arguments: ['%test_db_path%']}
+        tags:
+        - { name: console.command }
