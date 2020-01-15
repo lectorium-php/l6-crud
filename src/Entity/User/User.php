@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Entity;
+namespace App\Entity\User;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -9,14 +9,22 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
- * @ORM\Entity(repositoryClass="App\Repository\UserRepository")
+ * @ORM\Entity(repositoryClass="App\Repository\User\UserRepository")
  * @UniqueEntity(fields={"email"}, message="There is already an account with this email")
+ * @ORM\InheritanceType("SINGLE_TABLE")
+ * @ORM\DiscriminatorColumn(name="discriminator", type="string")
+ * @ORM\DiscriminatorMap({
+ *     "admin" = "User",
+ *     "teacher" = "Teacher",
+ *     "student" = "Student"
+ * })
  */
-class User implements UserInterface
+abstract class User implements UserInterface
 {
     const ROLES = [
         'admin' => 'ROLE_ADMIN',
-        'user' => 'ROLE_USER'
+        'teacher' => 'ROLE_TEACHER',
+        'student' => 'ROLE_STUDENT'
     ];
 
     /**
@@ -85,8 +93,6 @@ class User implements UserInterface
     public function getRoles(): array
     {
         $roles = $this->roles;
-        // guarantee every user at least has ROLE_USER
-        $roles[] = self::ROLES['user'];
 
         return array_unique($roles);
     }

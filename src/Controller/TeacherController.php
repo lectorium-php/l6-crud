@@ -2,9 +2,9 @@
 
 namespace App\Controller;
 
-use App\Entity\Teacher;
+use App\Entity\User\Teacher;
 use App\Form\TeacherType;
-use App\Repository\TeacherRepository;
+use App\Repository\User\TeacherRepository;
 use App\Service\Notifier;
 use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;

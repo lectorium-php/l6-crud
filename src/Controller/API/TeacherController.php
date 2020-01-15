@@ -2,7 +2,7 @@
 
 namespace App\Controller\API;
 
-use App\Repository\TeacherRepository;
+use App\Repository\User\TeacherRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Routing\Annotation\Route;
 
