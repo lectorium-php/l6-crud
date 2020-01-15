@@ -36,7 +36,7 @@ class Student extends User
     private $courses;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\CourseWork", mappedBy="students", orphanRemoval=true)
+     * @ORM\OneToMany(targetEntity="App\Entity\CourseWork", mappedBy="student", orphanRemoval=true)
      */
     private $courseWorks;
 

@@ -33,7 +33,7 @@ class CourseWorkRate
     private $courseWork;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\User\Teacher", cascade={"persist", "remove"})
+     * @ORM\ManyToOne(targetEntity="App\Entity\User\Teacher", inversedBy="courseWorkRates", cascade={"persist", "remove"})
      */
     private $teacher;
 
