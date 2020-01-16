@@ -91,4 +91,24 @@ class CourseController extends AbstractController
 
         return $this->redirectToRoute('course_index');
     }
+
+    /**
+     * @Route("/{id}/add-student", name="course_add_student", methods={"GET","POST"})
+     */
+    public function addStudent(Request $request, Course $course)
+    {
+        $form = $this->createForm(CourseType::class, $course, ['add_student' => true]);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $this->getDoctrine()->getManager()->flush();
+
+            return $this->redirectToRoute('course_add_student', ['id' => $course->getId()]);
+        }
+
+        return $this->render('course/edit.html.twig', [
+            'course' => $course,
+            'form' => $form->createView(),
+        ]);
+    }
 }
