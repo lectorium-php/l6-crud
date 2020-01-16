@@ -59,6 +59,7 @@ class TestFixturesLoaderCommand extends Command
         }
 
         $output->writeln('Done.');
+        return 0;
     }
 
     /**
