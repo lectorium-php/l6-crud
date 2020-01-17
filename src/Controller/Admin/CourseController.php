@@ -9,6 +9,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 
 /**
  * @Route("/course")
@@ -94,6 +95,7 @@ class CourseController extends AbstractController
 
     /**
      * @Route("/{id}/add-student", name="course_add_student", methods={"GET","POST"})
+     * @IsGranted("ADD_STUDENT", subject="course")
      */
     public function addStudent(Request $request, Course $course)
     {
