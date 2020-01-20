@@ -14,7 +14,6 @@ class CourseWork
 {
     const STATUSES = [
         'new' => 'new',
-        'submitted' => 'submitted',
         'rated' => 'rated'
     ];
 

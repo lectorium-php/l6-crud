@@ -2,6 +2,7 @@
 
 namespace App\Entity\User;
 
+use App\Entity\ApiToken;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
@@ -170,4 +171,8 @@ abstract class User implements UserInterface
         return $this;
     }
 
+    public function isAdmin()
+    {
+        return in_array(self::ROLES['admin'], $this->getRoles());
+    }
 }

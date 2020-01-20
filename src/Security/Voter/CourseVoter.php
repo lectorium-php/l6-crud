@@ -36,7 +36,6 @@ class CourseVoter extends Voter
         switch ($attribute) {
             case self::ACTIONS['ADD_STUDENT']:
                 return $this->canAddStudent($user, $subject);
-                break;
         }
 
         return false;
