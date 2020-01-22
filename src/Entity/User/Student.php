@@ -9,7 +9,7 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ORM\Entity(repositoryClass="App\Repository\StudentRepository")
+ * @ORM\Entity(repositoryClass="App\Repository\User\StudentRepository")
  */
 class Student extends User
 {
