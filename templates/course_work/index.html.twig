@@ -1,0 +1,39 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}CourseWork index{% endblock %}
+
+{% block body %}
+    <h1>CourseWork index</h1>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Title</th>
+                <th>Body</th>
+                <th>Status</th>
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for course_work in course_works %}
+            <tr>
+                <td>{{ course_work.id }}</td>
+                <td>{{ course_work.title }}</td>
+                <td>{{ course_work.body }}</td>
+                <td>{{ course_work.status }}</td>
+                <td>
+                    <a href="{{ path('course_work_show', {'course': course.id, 'id': course_work.id}) }}">show</a>
+                    <a href="{{ path('course_work_rate', {'course': course.id, 'id': course_work.id}) }}">rate</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="5">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{{ path('course_work_new', {'course': course.id}) }}">Create new</a>
+{% endblock %}

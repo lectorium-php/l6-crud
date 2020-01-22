@@ -9,6 +9,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 
 /**
  * @Route("/course")
@@ -90,5 +91,26 @@ class CourseController extends AbstractController
         }
 
         return $this->redirectToRoute('course_index');
+    }
+
+    /**
+     * @Route("/{id}/add-student", name="course_add_student", methods={"GET","POST"})
+     * @IsGranted("ADD_STUDENT", subject="course")
+     */
+    public function addStudent(Request $request, Course $course)
+    {
+        $form = $this->createForm(CourseType::class, $course, ['add_student' => true]);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $this->getDoctrine()->getManager()->flush();
+
+            return $this->redirectToRoute('course_add_student', ['id' => $course->getId()]);
+        }
+
+        return $this->render('course/edit.html.twig', [
+            'course' => $course,
+            'form' => $form->createView(),
+        ]);
     }
 }

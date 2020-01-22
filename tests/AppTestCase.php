@@ -57,4 +57,9 @@ class AppTestCase extends WebTestCase
 
         parent::tearDown();
     }
+
+    protected function logIn(string $email, string $password)
+    {
+        $this->client->setServerParameters(['PHP_AUTH_USER' => $email, 'PHP_AUTH_PW' => $password]);
+    }
 }
