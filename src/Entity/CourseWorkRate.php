@@ -93,4 +93,9 @@ class CourseWorkRate
     {
         $this->teacher = $teacher;
     }
+
+    public function __toString()
+    {
+        return (string)$this->rate;
+    }
 }
