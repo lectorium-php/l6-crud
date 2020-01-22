@@ -10,9 +10,6 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\Routing\Annotation\Route;
 
-/**
- * @Route("/api")
- */
 class UserController extends AbstractController
 {
     /**
@@ -32,7 +29,7 @@ class UserController extends AbstractController
     {
         $requestContent = json_decode($request->getContent(), true);
 
-        if (!$requestContent['email']) {
+        if (empty($requestContent['email'])) {
             return $this->json(['error' => 'Invalid request'], Response::HTTP_BAD_REQUEST);
         }
 
@@ -60,8 +57,13 @@ class UserController extends AbstractController
             return $this->json(['error' => 'Invalid request'], Response::HTTP_BAD_REQUEST);
         }
 
-        /** @var ApiToken $newToken */
-        $newApiToken = $this->userService->renewToken($requestContent['token']);
+        try {
+            $newApiToken = $this->userService->renewToken($requestContent['token']);
+        } catch (BadRequestHttpException $exception) {
+            return $this->json([
+                'error' => $exception->getMessage()
+            ], Response::HTTP_BAD_REQUEST);
+        }
 
         return $this->json([
             'api_token' => $newApiToken->getToken()

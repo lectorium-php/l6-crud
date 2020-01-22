@@ -1,0 +1,7 @@
+App\Entity\Course:
+  course1:
+    title: 'Course 1'
+    teachers: ["@teacher1"]
+
+  course2:
+    title: 'Course 2'

@@ -1,7 +1,8 @@
 <?php
 
-namespace App\Entity;
+namespace App\Entity\User;
 
+use App\Entity\ApiToken;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
@@ -9,14 +10,22 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
- * @ORM\Entity(repositoryClass="App\Repository\UserRepository")
+ * @ORM\Entity(repositoryClass="App\Repository\User\UserRepository")
  * @UniqueEntity(fields={"email"}, message="There is already an account with this email")
+ * @ORM\InheritanceType("SINGLE_TABLE")
+ * @ORM\DiscriminatorColumn(name="discriminator", type="string")
+ * @ORM\DiscriminatorMap({
+ *     "admin" = "Admin",
+ *     "teacher" = "Teacher",
+ *     "student" = "Student"
+ * })
  */
-class User implements UserInterface
+abstract class User implements UserInterface
 {
     const ROLES = [
         'admin' => 'ROLE_ADMIN',
-        'user' => 'ROLE_USER'
+        'teacher' => 'ROLE_TEACHER',
+        'student' => 'ROLE_STUDENT'
     ];
 
     /**
@@ -29,30 +38,33 @@ class User implements UserInterface
     /**
      * @ORM\Column(type="string", length=180, unique=true)
      */
-    private $email;
+    protected $email;
 
     /**
      * @ORM\Column(type="array")
      */
-    private $roles = [];
+    protected $roles = [];
 
     /**
      * @var string The hashed password
      * @ORM\Column(type="string", nullable=true)
      */
-    private $password;
+    protected $password;
 
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\ApiToken", mappedBy="user", orphanRemoval=true, cascade={"persist", "remove"})
      */
-    private $apiTokens;
+    protected $apiTokens;
 
     public function __construct()
     {
         $this->apiTokens = new ArrayCollection();
     }
 
-    public function getId(): ?int
+    /**
+     * @return mixed
+     */
+    public function getId()
     {
         return $this->id;
     }
@@ -85,8 +97,6 @@ class User implements UserInterface
     public function getRoles(): array
     {
         $roles = $this->roles;
-        // guarantee every user at least has ROLE_USER
-        $roles[] = self::ROLES['user'];
 
         return array_unique($roles);
     }
@@ -161,4 +171,8 @@ class User implements UserInterface
         return $this;
     }
 
+    public function isAdmin()
+    {
+        return in_array(self::ROLES['admin'], $this->getRoles());
+    }
 }
