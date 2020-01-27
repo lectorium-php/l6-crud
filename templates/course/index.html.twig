@@ -3,18 +3,25 @@
 {% block title %}Course index{% endblock %}
 
 {% block body %}
-    <h1>Course index</h1>
+    <h1>Courses ({{ pagination.getTotalItemCount }})</h1>
+
+    <div>
+        {{ knp_pagination_filter(pagination, {
+            'c.title': 'Course title',
+        }) }}
+    </div>
 
     <table class="table">
         <thead>
             <tr>
-                <th>Id</th>
-                <th>Title</th>
+                <th>{{ knp_pagination_sortable(pagination, 'Id', 'c.id') }}</th>
+                <th>{{ knp_pagination_sortable(pagination, 'Title', 'c.title') }}</th>
                 <th>actions</th>
             </tr>
         </thead>
         <tbody>
-        {% for course in courses %}
+
+        {% for course in pagination %}
             <tr>
                 <td>{{ course.id }}</td>
                 <td>{{ course.title }}</td>
@@ -30,6 +37,11 @@
         {% endfor %}
         </tbody>
     </table>
+
+    {# display navigation #}
+    <div class="navigation">
+        {{ knp_pagination_render(pagination) }}
+    </div>
 
     <a href="{{ path('course_new') }}">Create new</a>
 {% endblock %}
