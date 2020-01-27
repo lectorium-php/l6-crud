@@ -13,6 +13,8 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class Course
 {
+    use TimestampableEntity;
+
     /**
      * @ORM\Id()
      * @ORM\GeneratedValue()
