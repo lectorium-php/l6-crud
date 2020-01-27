@@ -22,7 +22,7 @@ security:
             security: false
 
         api_unsecure:
-            pattern: ^/api/(register|renew-token)
+            pattern: ^/api/(register|renew-token|doc.json|doc)
             anonymous: true
 
         api:
