@@ -5,6 +5,7 @@ namespace App\Controller\Admin;
 use App\Entity\Course;
 use App\Form\CourseType;
 use App\Repository\CourseRepository;
+use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -19,10 +20,16 @@ class CourseController extends AbstractController
     /**
      * @Route("/", name="course_index", methods={"GET"})
      */
-    public function index(CourseRepository $courseRepository): Response
+    public function index(CourseRepository $courseRepository, PaginatorInterface $paginator, Request $request): Response
     {
+        $pagination = $paginator->paginate(
+            $courseRepository->getAll(), /* query NOT result */
+            $request->query->getInt('page', 1), /*page number*/
+            $this->getParameter('knp_paginator.page_range') /*limit per page*/
+        );
+
         return $this->render('course/index.html.twig', [
-            'courses' => $courseRepository->findAll(),
+            'pagination' => $pagination,
         ]);
     }
 

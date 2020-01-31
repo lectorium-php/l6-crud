@@ -1,7 +1,14 @@
 App\Entity\Course:
-  course1:
+  course (template):
+    created: "<(new \\DateTime('- 2 days'))>"
+    updated: "<(new \\DateTime())>"
+
+  course1 (extends course):
     title: 'Course 1'
     teachers: ["@teacher1"]
 
-  course2:
+  course2 (extends course):
     title: 'Course 2'
+
+  course{3..20} (extends course):
+    title: '<word()>'

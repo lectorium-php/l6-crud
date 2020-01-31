@@ -93,9 +93,9 @@ class Teacher extends User
     }
 
     /**
-     * @return ArrayCollection
+     * @return Collection|CourseWorkRate[]
      */
-    public function getCourseWorkRates(): ArrayCollection
+    public function getCourseWorkRates(): Collection
     {
         return $this->courseWorkRates;
     }
