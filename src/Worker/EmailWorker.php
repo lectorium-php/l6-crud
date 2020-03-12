@@ -28,7 +28,7 @@ class EmailWorker implements Worker
 
     public function sendToQueue(string $sendTo, string $body)
     {
-        return $this->manager->put(self::class, ['email' => $sendTo, 'body' => $body]);
+        return $this->manager->put('app.email_worker', ['email' => $sendTo, 'body' => $body]);
     }
 
     public function execute(array $arguments)
