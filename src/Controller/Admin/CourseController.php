@@ -3,8 +3,12 @@
 namespace App\Controller\Admin;
 
 use App\Entity\Course;
+use App\Entity\User\Student;
 use App\Form\CourseType;
 use App\Repository\CourseRepository;
+use App\Repository\User\StudentRepository;
+use App\Service\Notifier;
+use App\Worker\EmailWorker;
 use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -69,13 +73,19 @@ class CourseController extends AbstractController
     /**
      * @Route("/{id}/edit", name="course_edit", methods={"GET","POST"})
      */
-    public function edit(Request $request, Course $course): Response
+    public function edit(Request $request, Course $course, StudentRepository $repository, Notifier $notifier, EmailWorker $worker): Response
     {
         $form = $this->createForm(CourseType::class, $course);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
             $this->getDoctrine()->getManager()->flush();
+
+            /** @var Student $student */
+            foreach ($course->getStudents() as $student) {
+//                $notifier->notify($student->getEmail());
+                $worker->sendToQueue($student->getEmail(), "Hi, {$student->getFirstName()} {$student->getLastName()}");
+            }
 
             return $this->redirectToRoute('course_index');
         }

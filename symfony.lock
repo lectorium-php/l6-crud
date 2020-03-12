@@ -1,4 +1,7 @@
 {
+    "aws/aws-sdk-php": {
+        "version": "3.133.34"
+    },
     "behat/transliterator": {
         "version": "v1.3.0"
     },
@@ -106,6 +109,15 @@
     "gedmo/doctrine-extensions": {
         "version": "v2.4.39"
     },
+    "guzzlehttp/guzzle": {
+        "version": "6.5.2"
+    },
+    "guzzlehttp/promises": {
+        "version": "v1.3.1"
+    },
+    "guzzlehttp/psr7": {
+        "version": "1.6.1"
+    },
     "hautelook/alice-bundle": {
         "version": "2.1",
         "recipe": {
@@ -138,8 +150,17 @@
     "laminas/laminas-zendframework-bridge": {
         "version": "1.0.1"
     },
+    "mcfedr/queue-manager-bundle": {
+        "version": "6.5.0"
+    },
+    "mcfedr/sqs-queue-driver-bundle": {
+        "version": "3.5.0"
+    },
     "monolog/monolog": {
         "version": "1.25.1"
+    },
+    "mtdowling/jmespath.php": {
+        "version": "2.5.0"
     },
     "myclabs/deep-copy": {
         "version": "1.9.4"
@@ -169,6 +190,9 @@
             "config/packages/nelmio_api_doc.yaml",
             "config/routes/nelmio_api_doc.yaml"
         ]
+    },
+    "nesbot/carbon": {
+        "version": "2.31.0"
     },
     "nikic/php-parser": {
         "version": "v4.2.5"
@@ -200,8 +224,17 @@
     "psr/container": {
         "version": "1.0.0"
     },
+    "psr/http-message": {
+        "version": "1.0.1"
+    },
     "psr/log": {
         "version": "1.1.1"
+    },
+    "ralouphie/getallheaders": {
+        "version": "3.0.3"
+    },
+    "ramsey/uuid": {
+        "version": "3.9.3"
     },
     "sebastian/comparator": {
         "version": "3.0.2"

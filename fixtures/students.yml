@@ -7,3 +7,8 @@ App\Entity\User\Student:
     email: 'student1.symfony.lectorium@appcreative.net'
     password: "<encodePassword(@self, 'student1')>"
     courses: ['@course1']
+
+  student{2..50} (extends student):
+    email: '<email()>'
+    password: "<encodePassword(@self, 'student')>"
+    courses: ['@course1']

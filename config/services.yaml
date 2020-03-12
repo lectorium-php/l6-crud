@@ -42,3 +42,7 @@ services:
         - {method: setTestDbPath, arguments: ['%test_db_path%']}
         tags:
         - { name: console.command }
+
+    app.email_worker:
+        alias: App\Worker\EmailWorker
+        public: true

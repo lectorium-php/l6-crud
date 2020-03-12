@@ -1,0 +1,12 @@
+mcfedr_queue_manager:
+  managers:
+    default:
+      driver: sqs
+      options:
+        default_url: https://sqs.eu-central-1.amazonaws.com/311844074355/lectorium
+        region: eu-central-1
+        credentials:
+          key: 'AKIAURG226NZTH7TBAEA'
+          secret: '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'
+        queues:
+          lectorium: https://sqs.eu-central-1.amazonaws.com/311844074355/lectorium

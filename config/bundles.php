@@ -19,4 +19,6 @@ return [
     Knp\Bundle\PaginatorBundle\KnpPaginatorBundle::class => ['all' => true],
     Stof\DoctrineExtensionsBundle\StofDoctrineExtensionsBundle::class => ['all' => true],
     Nelmio\ApiDocBundle\NelmioApiDocBundle::class => ['all' => true],
+    Mcfedr\QueueManagerBundle\McfedrQueueManagerBundle::class => ['all' => true],
+    Mcfedr\SqsQueueDriverBundle\McfedrSqsQueueDriverBundle::class => ['all' => true],
 ];
